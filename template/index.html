@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>預約系統</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .slot { border: 1px solid #ccc; padding: 8px; margin: 5px; display: inline-block; }
+    .free { background-color: #e0ffe0; cursor: pointer; }
+    .booked { background-color: #ffcccc; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>預約系統</h2>
+
+  <!-- 日期選擇 -->
+  <label>選擇日期：
+    <input type="date" id="datePicker">
+  </label>
+  <button onclick="loadSlots()">查詢時段</button>
+
+  <h3>可預約時段</h3>
+  <div id="slots"></div>
+
+  <h3>填寫資料</h3>
+  <label>姓名：<input type="text" id="name"></label><br>
+  <label>電話：<input type="text" id="phone"></label><br>
+  <label>部門：<input type="text" id="department"></label><br>
+
+  <div id="result" style="margin-top:10px; color: blue;"></div>
+
+  <script>
+    const API_BASE = "http://127.0.0.1:5000/api";
+
+    // 查詢時段
+    async function loadSlots() {
+      const date = document.getElementById("datePicker").value;
+      if (!date) {
+        alert("請選擇日期");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/status?date=${date}`);
+        const data = await res.json();
+
+        if (data.error) {
+          alert(data.error);
+          return;
+        }
+
+        const slotsDiv = document.getElementById("slots");
+        slotsDiv.innerHTML = "";
+
+        data.forEach(slot => {
+          const div = document.createElement("div");
+          div.className = "slot " + (slot.status === "free" ? "free" : "booked");
+          div.innerText = `${slot.start_time} - ${slot.end_time} (${slot.status})`;
+
+          if (slot.status === "free") {
+            div.onclick = () => bookSlot(date, slot.start_time);
+          } else if (slot.status === "booked") {
+            div.onclick = () => cancelSlot(date, slot.start_time);
+          }
+
+          slotsDiv.appendChild(div);
+        });
+      } catch (err) {
+        console.error(err);
+        alert("查詢時段失敗");
+      }
+    }
+
+    // 預約
+    async function bookSlot(date, start_time) {
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
+      const department = document.getElementById("department").value;
+
+      if (!name || !phone || !department) {
+        alert("請先輸入姓名、電話、部門");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/book`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, phone, department, date, start_time })
+        });
+
+        const data = await res.json();
+        document.getElementById("result").innerText = data.message || data.error;
+
+        // 預約後刷新時段
+        loadSlots();
+      } catch (err) {
+        console.error(err);
+        alert("預約失敗");
+      }
+    }
+
+    // 取消預約
+    async function cancelSlot(date, start_time) {
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
+
+      if (!name || !phone) {
+        alert("請輸入姓名與電話以取消預約");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/cancel`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, phone, date, start_time })
+        });
+
+        const data = await res.json();
+        document.getElementById("result").innerText = data.message || data.error;
+
+        // 取消後刷新時段
+        loadSlots();
+      } catch (err) {
+        console.error(err);
+        alert("取消預約失敗");
+      }
+    }
+  </script>
+</body>
+</html>
