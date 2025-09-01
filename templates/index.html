@@ -25,7 +25,7 @@
   <h3>填寫資料</h3>
   <label>姓名：<input type="text" id="name"></label><br>
   <label>電話：<input type="text" id="phone"></label><br>
-  <label>部門：<input type="text" id="department"></label><br>
+  <label>系所：<input type="text" id="department"></label><br>
 
   <div id="result" style="margin-top:10px; color: blue;"></div>
 
@@ -101,7 +101,7 @@
       const department = document.getElementById("department").value;
 
       if (!name || !phone || !department) {
-        alert("請先輸入姓名、電話、部門");
+        alert("請先輸入姓名、電話、系所");
         return;
       }
 
