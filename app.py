@@ -17,8 +17,9 @@ def get_db_connection():
     host="dpg-d2oh52ogjchc73eok92g-a",   # 例如 abc123.render.com
     port="5432"            # Render PostgreSQL 的 port
 )
-    cursor = conn.cursor()
-    return conn, cursor
+    return conn
+
+    
 
 # 初始化資料庫
 def init_db():
