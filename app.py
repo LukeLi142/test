@@ -78,7 +78,7 @@ def get_status():
         return jsonify({'error': '不能查詢今天以前的日期'}), 400
 
     cursor.execute("SELECT COUNT(*) FROM reservations WHERE date = %s", (date_str,))
-    count = cursor.fetchone()["count"]
+    count = list(cursor.fetchone().values())[0]
 
     if count == 0:
         insert_time_slots(date_str, 10, 17)
