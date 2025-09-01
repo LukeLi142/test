@@ -175,6 +175,10 @@ scheduler = BackgroundScheduler()
 scheduler.add_job(clean_old_reservations, 'interval', days=1)
 scheduler.start()
 
+# 自動訪問網站避免休眠
+@app.route("/health")
+def health():
+    return jsonify(status="ok")
 
 if __name__ == '__main__':
     init_db()  # 初始化資料表
