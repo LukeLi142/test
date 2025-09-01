@@ -36,7 +36,7 @@ def init_db():
     """)
     conn.commit()   
     conn.close() 
-
+init_db()
 # 插入空閒時段
 def insert_time_slots(date, start_hour, end_hour):
     conn, cursor = get_db_connection()
