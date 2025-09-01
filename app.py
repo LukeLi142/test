@@ -10,7 +10,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 def get_db_connection():
-    conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
+    conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor, sslmode='require')
     cursor = conn.cursor()
     return conn, cursor
 
