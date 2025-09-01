@@ -61,6 +61,13 @@ def insert_time_slots(date, start_hour, end_hour):
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
+
+
+@app.route("/")
+def home():
+    return "Hello, Render!"
+
+
 # 查詢 API
 @app.route('/api/status', methods=['GET'])
 def get_status():
