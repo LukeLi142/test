@@ -31,10 +31,17 @@
 
   <script>
     const API_BASE = "https://test-2-8qsn.onrender.com/api";
-
+    const date = document.getElementById("datePicker").value;
+    const today = new Date();
+    const minDate = today.toISOString().split('T')[0];
+    const maxDateObj = new Date();
+    maxDateObj.setDate(today.getDate() + 10);
+    const maxDate = maxDateObj.toISOString().split('T')[0];
+    datePicker.min = minDate;
+    datePicker.max = maxDate;
     // 查詢時段
     async function loadSlots() {
-      const date = document.getElementById("datePicker").value;
+      
       if (!date) {
         alert("請選擇日期");
         return;
