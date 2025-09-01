@@ -34,7 +34,8 @@ def init_db():
             CONSTRAINT unique_slot UNIQUE (date, start_time)
         );
     """)
-
+    conn.commit()   
+    conn.close() 
 
 # 插入空閒時段
 def insert_time_slots(date, start_hour, end_hour):
@@ -77,8 +78,9 @@ def get_status():
     if date_obj < today:
         return jsonify({'error': '不能查詢今天以前的日期'}), 400
 
-    cursor.execute("SELECT COUNT(*) FROM reservations WHERE date = %s", (date_str,))
-    count = list(cursor.fetchone().values())[0]
+    cursor.execute("SELECT COUNT(*) AS cnt FROM reservations WHERE date = %s", (date_str,))
+    row = cursor.fetchone()
+    count = row["cnt"] if row else 0
 
     if count == 0:
         insert_time_slots(date_str, 10, 17)
