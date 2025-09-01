@@ -24,8 +24,8 @@ def get_db_connection():
 
 # 初始化資料庫
 def init_db():
-    conn = get_db_connection()
-    cursor = conn.cursor()
+    conn, cursor = get_db_connection()
+    
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS reservations (
