@@ -10,7 +10,13 @@ from apscheduler.schedulers.background import BackgroundScheduler
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 def get_db_connection():
-    conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor, sslmode='require')
+    conn = psycopg2.connect(
+    dbname="test_hrxm",
+    user="test_hrxm_user",
+    password="lWnCZdHexyxtghjql1nw2Vy2qAwJ9Oqv",
+    host="dpg-d2oh52ogjchc73eok92g-a",   # 例如 abc123.render.com
+    port="5432"            # Render PostgreSQL 的 port
+)
     cursor = conn.cursor()
     return conn, cursor
 
