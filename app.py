@@ -34,7 +34,7 @@ def init_db():
             CONSTRAINT unique_slot UNIQUE (date, start_time)
         );
     """)
-init_db()
+
 
 # 插入空閒時段
 def insert_time_slots(date, start_hour, end_hour):
