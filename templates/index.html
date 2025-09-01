@@ -31,17 +31,33 @@
 
   <script>
     const API_BASE = "https://test-2-8qsn.onrender.com/api";
-    const date = document.getElementById("datePicker").value;
+    
+    // ---------- 日期區間設定：今天 ~ 未來 10 天 ----------
+    const dateInput = document.getElementById("datePicker");
+    const formatDate = (date) => {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
+  };
     const today = new Date();
-    const minDate = today.toISOString().split('T')[0];
-    const maxDateObj = new Date();
-    maxDateObj.setDate(today.getDate() + 10);
-    const maxDate = maxDateObj.toISOString().split('T')[0];
-    datePicker.min = minDate;
-    datePicker.max = maxDate;
+    const maxDate = new Date();
+    maxDate.setDate(today.getDate() + 10);
+
+    // 設定 min / max 並預設選到今天
+    dateInput.min = formatDate(today);
+    dateInput.max = formatDate(maxDate);
+    dateInput.value = formatDate(today);
+    
+    // 若使用者手動輸入越界，幫他拉回邊界
+    dateInput.addEventListener("change", () => {
+    if (!dateInput.value) return;
+    if (dateInput.value < dateInput.min) dateInput.value = dateInput.min;
+    if (dateInput.value > dateInput.max) dateInput.value = dateInput.max;
+  });
     // 查詢時段
     async function loadSlots() {
-      
+      const date = dateInput.value;
       if (!date) {
         alert("請選擇日期");
         return;
