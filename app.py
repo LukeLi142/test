@@ -65,7 +65,7 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route("/")
 def home():
-    return "Hello, Render!"
+    return render_template("index.html")
 
 
 # 查詢 API
