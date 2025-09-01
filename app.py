@@ -17,7 +17,8 @@ def get_db_connection():
     host="dpg-d2oh52ogjchc73eok92g-a",   # 例如 abc123.render.com
     port="5432"            # Render PostgreSQL 的 port
 )
-    return conn
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    return conn, cursor
 
     
 
